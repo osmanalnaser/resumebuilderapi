@@ -3,13 +3,16 @@ package in.osmanalnaser.resumebuilderapi.controller;
 import in.osmanalnaser.resumebuilderapi.dto.AuthResponse;
 import in.osmanalnaser.resumebuilderapi.dto.RegisterRequest;
 import in.osmanalnaser.resumebuilderapi.service.AuthService;
+import in.osmanalnaser.resumebuilderapi.service.FileUploadService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 
 import static in.osmanalnaser.resumebuilderapi.util.AppConstants.*;
@@ -21,6 +24,7 @@ import static in.osmanalnaser.resumebuilderapi.util.AppConstants.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final FileUploadService fileUploadService;
 
     @PostMapping(REGISTER)
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
@@ -35,5 +39,14 @@ public class AuthController {
         log.info("Inside AuthController - verifyEmail(): {}", token);
         authService.verifyEmail(token);
         return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Email verified successfully"));
+    }
+
+    @PostMapping(UPLOAD_PROFILE)
+    public ResponseEntity<?> uploadImage(@RequestPart("image") MultipartFile file) throws IOException {
+        log.info("Inside AuthController - uploadImage()");
+        Map<String, String> response = fileUploadService.uploadSingleImage(file);
+        return ResponseEntity.ok(response);
+
+
     }
 }

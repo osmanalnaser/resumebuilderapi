@@ -24,10 +24,10 @@ public class AuthService {
     @Value("${app.base.url=http://localhost:8080}")
     private String appBaseUrl;
 
-    public AuthResponse register(RegisterRequest request){
+    public AuthResponse register(RegisterRequest request) {
         log.info("Inside AuthService: register() {} ", request);
 
-        if(userRepository.existsByEmail(request.getEmail())) {
+        if (userRepository.existsByEmail(request.getEmail())) {
             throw new ResourceExistsException("User already exists with this email");
         }
 
@@ -41,8 +41,9 @@ public class AuthService {
     }
 
     private void sendVerificationEmail(User newUser) {
-        try{
-            String link = appBaseUrl+"/api/auth/verify-email?token="+newUser.getVerificationToken();
+        log.info("Inside AuthService - sendVerificationEmail(): {}", newUser);
+        try {
+            String link = appBaseUrl + "/api/auth/verify-email?token=" + newUser.getVerificationToken();
             String html =
                     "<div style='font-family:sans-serif'>" +
                             "<h2>Verify your email</h2>" +
@@ -59,7 +60,8 @@ public class AuthService {
                             "</div>";
             emailService.sendHtmlEmail(newUser.getEmail(), "Verify your Email", html);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to send verification email:" +e.getMessage());
+            log.error("Exception occured at sendVerificationEmail(): {}", e.getMessage());
+            throw new RuntimeException("Failed to send verification email:" + e.getMessage());
         }
     }
 
@@ -75,6 +77,7 @@ public class AuthService {
                 .updatedAt(newUser.getUpdatedAt())
                 .build();
     }
+
     private User toDocument(RegisterRequest request) {
         return User.builder()
                 .name(request.getName())
@@ -86,5 +89,20 @@ public class AuthService {
                 .verificationToken(UUID.randomUUID().toString())
                 .verificationExpires(LocalDateTime.now().plusHours(24))
                 .build();
+    }
+
+    public void verifyEmail(String token) {
+        log.info("Inside AuthService: verifyEmail():  {}", token);
+        User user = userRepository.findByVerificationToken(token)
+                .orElseThrow(() -> new RuntimeException("Invalid or expired verification token"));
+
+        if (user.getVerificationExpires() != null && user.getVerificationExpires().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Verification token has expired. Please request new one");
+        }
+
+        user.setEmailVerified(true);
+        user.setVerificationToken(null);
+        user.setVerificationExpires(null);
+        userRepository.save(user);
     }
 }

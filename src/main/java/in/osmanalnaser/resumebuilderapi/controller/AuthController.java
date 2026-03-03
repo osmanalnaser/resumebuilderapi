@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 import static in.osmanalnaser.resumebuilderapi.util.AppConstants.*;
 
@@ -53,6 +54,19 @@ public class AuthController {
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         AuthResponse response = authService.login(request);
         return ResponseEntity.ok(response);
+    }
 
+    @PostMapping(RESEND_VERIFICATION)
+    public ResponseEntity<?> resendVerification(@RequestBody Map<String, String> body){
+        // Step 1: Get the email from request
+        String email = body.get("email");
+        // Step 2: Add the validations
+        if (Objects.isNull(email)){
+            return ResponseEntity.badRequest().body(Map.of("message", "Email is required"));
+        }
+        // Step 3: Call the service method to resend verification link
+        authService.resendVerification(email);
+        // Step 4: Return response
+        return ResponseEntity.ok(Map.of("success", true, "message", "Verification email sent"));
     }
 }

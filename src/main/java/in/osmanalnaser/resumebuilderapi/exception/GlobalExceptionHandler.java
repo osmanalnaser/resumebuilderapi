@@ -43,6 +43,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex){
         log.info("Inside GlobalExceptionHandler - handleGenericException()");
         Map<String, Object> response = new HashMap<>();

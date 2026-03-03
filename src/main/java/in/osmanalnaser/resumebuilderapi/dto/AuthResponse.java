@@ -22,4 +22,5 @@ public class AuthResponse {
     private Boolean emailVerified;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String token;
 }

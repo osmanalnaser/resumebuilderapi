@@ -1,6 +1,7 @@
 package in.osmanalnaser.resumebuilderapi.controller;
 
 import in.osmanalnaser.resumebuilderapi.dto.AuthResponse;
+import in.osmanalnaser.resumebuilderapi.dto.LoginRequest;
 import in.osmanalnaser.resumebuilderapi.dto.RegisterRequest;
 import in.osmanalnaser.resumebuilderapi.service.AuthService;
 import in.osmanalnaser.resumebuilderapi.service.FileUploadService;
@@ -46,7 +47,12 @@ public class AuthController {
         log.info("Inside AuthController - uploadImage()");
         Map<String, String> response = fileUploadService.uploadSingleImage(file);
         return ResponseEntity.ok(response);
+    }
 
+    @PostMapping(LOGIN)
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
+        AuthResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
 
     }
 }

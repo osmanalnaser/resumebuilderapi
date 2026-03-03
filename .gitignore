@@ -47,3 +47,5 @@ Thumbs.db
 # Allow nested build folders if needed
 !**/src/main/**/target/
 !**/src/test/**/target/
+
+*.properties

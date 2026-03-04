@@ -148,4 +148,9 @@ public class AuthService {
         //Step 5: resend the verification email
         sendVerificationEmail(user);
     }
+
+    public AuthResponse getProfile(Object principalObject) {
+        User existingUser = (User) principalObject;
+        return toResponse(existingUser);
+    }
 }

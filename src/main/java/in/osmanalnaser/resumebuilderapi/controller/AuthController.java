@@ -1,5 +1,6 @@
 package in.osmanalnaser.resumebuilderapi.controller;
 
+import in.osmanalnaser.resumebuilderapi.document.User;
 import in.osmanalnaser.resumebuilderapi.dto.AuthResponse;
 import in.osmanalnaser.resumebuilderapi.dto.LoginRequest;
 import in.osmanalnaser.resumebuilderapi.dto.RegisterRequest;
@@ -8,6 +9,7 @@ import in.osmanalnaser.resumebuilderapi.service.FileUploadService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -68,5 +70,16 @@ public class AuthController {
         authService.resendVerification(email);
         // Step 4: Return response
         return ResponseEntity.ok(Map.of("success", true, "message", "Verification email sent"));
+    }
+
+    @GetMapping(PROFILE)
+    public ResponseEntity<?> getProfile(Authentication authentication) {
+        //Step 1: Get the principal object
+        Object principalObject = authentication.getPrincipal();
+        //Step 2: Call the service method
+        AuthResponse currentProfile = authService.getProfile(principalObject);
+        //Step 3: return the response
+        return ResponseEntity.ok(currentProfile);
+
     }
 }

@@ -13,7 +13,7 @@ This project is designed as a portfolio project to demonstrate modern backend de
 - Secure REST API with Spring Security
 - Resume CRUD (Create, Read, Update, Delete)
 - PDF Resume Export
-- Razorpay Payment Integration
+- PayPal Sandboxing Integration
 - Email Services with Brevo
 - MongoDB Database
 - Monitoring with Spring Boot Actuator
@@ -41,7 +41,7 @@ This project is designed as a portfolio project to demonstrate modern backend de
 - Git & GitHub
 
 ### External Services
-- Razorpay (Payments)
+- PayPal (Payments)
 - Brevo (Email service)
 
 ---

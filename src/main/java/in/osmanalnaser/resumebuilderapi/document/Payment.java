@@ -24,9 +24,9 @@ public class Payment {
     private String id;
 
     private String userId;
-    private String PaypalOrderId;
-    private String PayPalSignature;
-
+    private String paypalOrderId;
+    private String paypalPaymentId;
+    private String paypalSignature;
     private Integer amount;
     private String currency;
     private String planType;
@@ -37,7 +37,7 @@ public class Payment {
     private String receipt;
 
     @CreatedDate
-    private LocalDateTime createdAT;
+    private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
